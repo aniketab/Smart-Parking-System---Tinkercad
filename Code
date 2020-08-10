@@ -1,0 +1,61 @@
+int trigPin = 11;
+int echoPin = 12;
+int redPin = 10;
+//int bluePin = 9;
+int greenPin = 8;
+int entrance_green = 7;
+int entrance_red = 6;
+long duration, cm;
+
+void setup()
+{
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(redPin, OUTPUT);
+  //pinMode(bluePin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(entrance_green, OUTPUT);
+  pinMode(entrance_red, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  digitalWrite(trigPin, LOW);
+  delay(20);
+  digitalWrite(trigPin, HIGH);
+  delay(1000);
+  digitalWrite(trigPin, LOW);
+  
+  duration = pulseIn(echoPin, HIGH);
+  cm = duration/58.2;  //distance = (traveltime/2) x speed of sound
+  							//The speed of sound is: 343m/s = 0.0343 cm/uS = 1/29.1 cm/uS
+  if (cm<=270)
+  {
+    RG_light(255, 0);
+    RG_light_entrance(255, 0);
+  }
+  else if (cm>270 && cm<=318)
+  {
+    RG_light(0, 255);
+    RG_light_entrance(255, 0);
+  }
+  else
+  {
+    RG_light(0, 0);
+    RG_light_entrance(0, 255);
+  }
+}
+  
+void RG_light(int red_value, int green_value)
+{
+  
+  analogWrite(redPin, red_value);
+  analogWrite(greenPin, green_value);
+}
+
+void RG_light_entrance(int Ered_value, int Egreen_value)
+{
+  analogWrite(entrance_red, Ered_value);
+  analogWrite(entrance_green, Egreen_value);
+}
